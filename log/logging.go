@@ -10,20 +10,18 @@ import (
 func Logging(returnedErr error) {
 	filename := "logs.log"
 	pwd, err := os.Getwd()
+	var builder strings.Builder
 	if err != nil {
 		fmt.Printf("logging: cannot get filepath: %s\n", err.Error())
 	} else {
 		path := strings.Split(pwd, "/")
-		fmt.Println(path)
 		temp := filename
-		filename = path[0]
-		for i, val := range path {
-			if i == 0 {
-				continue
-			}
-			filename += val + "_"
+		for i := 1; i < len(path); i++ {
+			builder.WriteString(path[i])
+			builder.WriteString("_")
 		}
-		filename += temp
+		builder.WriteString(temp)
+		filename = builder.String()
 	}
 
 	file, err := os.OpenFile(filename, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
